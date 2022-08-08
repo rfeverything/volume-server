@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package volume;
+
+option go_package = "./volume";
+
+service Volume {
+    rpc Write(WriteReq) returns (WriteResp) {}
+    rpc Read(ReadReq) returns (ReadResp) {}
+    rpc Status(StatusReq) returns (StatusResp) {}
+}
+
+message WriteReq {
+    uint32 volume_id = 1;
+    uint64 fid = 2;
+    int32 size = 3;
+    bytes blob = 4;
+}
+
+message WriteResp {}
+
+message StatusReq {
+
+}
+
+message StatusResp {
+    int64 size = 1;
+}
+
+message ReadReq {
+
+}
+
+message ReadResp {
+
+}
