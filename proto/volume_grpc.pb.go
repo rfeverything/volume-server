@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type VolumeClient interface {
 	Write(ctx context.Context, in *WriteReq, opts ...grpc.CallOption) (*WriteResp, error)
 	Read(ctx context.Context, in *ReadReq, opts ...grpc.CallOption) (*ReadResp, error)
-	Status(ctx context.Context, in *StatusReq, opts ...grpc.CallOption) (*StatusResp, error)
+	VolumeStatus(ctx context.Context, in *StatusReq, opts ...grpc.CallOption) (*StatusResp, error)
 }
 
 type volumeClient struct {
@@ -53,9 +53,9 @@ func (c *volumeClient) Read(ctx context.Context, in *ReadReq, opts ...grpc.CallO
 	return out, nil
 }
 
-func (c *volumeClient) Status(ctx context.Context, in *StatusReq, opts ...grpc.CallOption) (*StatusResp, error) {
+func (c *volumeClient) VolumeStatus(ctx context.Context, in *StatusReq, opts ...grpc.CallOption) (*StatusResp, error) {
 	out := new(StatusResp)
-	err := c.cc.Invoke(ctx, "/volume.Volume/Status", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/volume.Volume/VolumeStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *volumeClient) Status(ctx context.Context, in *StatusReq, opts ...grpc.C
 type VolumeServer interface {
 	Write(context.Context, *WriteReq) (*WriteResp, error)
 	Read(context.Context, *ReadReq) (*ReadResp, error)
-	Status(context.Context, *StatusReq) (*StatusResp, error)
+	VolumeStatus(context.Context, *StatusReq) (*StatusResp, error)
 	mustEmbedUnimplementedVolumeServer()
 }
 
@@ -82,8 +82,8 @@ func (UnimplementedVolumeServer) Write(context.Context, *WriteReq) (*WriteResp, 
 func (UnimplementedVolumeServer) Read(context.Context, *ReadReq) (*ReadResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
 }
-func (UnimplementedVolumeServer) Status(context.Context, *StatusReq) (*StatusResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Status not implemented")
+func (UnimplementedVolumeServer) VolumeStatus(context.Context, *StatusReq) (*StatusResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VolumeStatus not implemented")
 }
 func (UnimplementedVolumeServer) mustEmbedUnimplementedVolumeServer() {}
 
@@ -134,20 +134,20 @@ func _Volume_Read_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Volume_Status_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Volume_VolumeStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StatusReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VolumeServer).Status(ctx, in)
+		return srv.(VolumeServer).VolumeStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/volume.Volume/Status",
+		FullMethod: "/volume.Volume/VolumeStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VolumeServer).Status(ctx, req.(*StatusReq))
+		return srv.(VolumeServer).VolumeStatus(ctx, req.(*StatusReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -168,8 +168,8 @@ var Volume_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Volume_Read_Handler,
 		},
 		{
-			MethodName: "Status",
-			Handler:    _Volume_Status_Handler,
+			MethodName: "VolumeStatus",
+			Handler:    _Volume_VolumeStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -7,7 +7,7 @@ option go_package = "./volume";
 service Volume {
     rpc Write(WriteReq) returns (WriteResp) {}
     rpc Read(ReadReq) returns (ReadResp) {}
-    rpc Status(StatusReq) returns (StatusResp) {}
+    rpc VolumeStatus(StatusReq) returns (StatusResp) {}
 }
 
 message WriteReq {
@@ -24,11 +24,19 @@ message StatusReq {
 }
 
 message StatusResp {
-    int64 size = 1;
+    uint64 total = 1;
+    uint64 free = 2;
+    uint64 used = 3;
+    uint64 block_size = 4;
+    uint64 block_count = 5;
 }
 
 message ReadReq {
-
+    uint32 volume_id = 1;
+    uint64 fid = 2;
+    uint64 block_id = 3;
+    uint64 offset = 4;
+    int32 size = 5;
 }
 
 message ReadResp {
